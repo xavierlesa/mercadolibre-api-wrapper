@@ -80,18 +80,18 @@ class MeliWrapper(Meli):
         return response.json()
 
 
-    def me():
+    def me(self):
         """
         Return my own user profiel
         """
         return self.get_user()
 
 
-    def get_user(id='me'):
+    def get_user(self, id='me'):
         return self.api_call('/users/%s' % id)
 
 
-    def get_categories(id=None):
+    def get_categories(self, id=None):
         """
         Return category information or root categories
         """
@@ -103,13 +103,13 @@ class MeliWrapper(Meli):
         return self.api_call(endpoint)
 
 
-    def get_items(user_id, limit=50, offset=0):
+    def get_items(self, user_id, limit=50, offset=0):
         """
         Return all items by user_id
         """
 
         args = {
-                'site_id': seld.site_id, 
+                'site_id': self.site_id, 
                 'seller_id': seller_id,
                 'limit': limit,
                 'offset': offset
