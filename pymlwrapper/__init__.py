@@ -110,7 +110,7 @@ class MeliWrapper(Meli):
 
         args = {
                 'site_id': self.site_id, 
-                'seller_id': seller_id,
+                'seller_id': user_id,
                 'limit': limit,
                 'offset': offset
                 }
