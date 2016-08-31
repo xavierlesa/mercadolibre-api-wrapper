@@ -7,8 +7,14 @@ from meli import Meli
 class MeliWrapperError(Exception):
     pass
 
+
 class MeliWrapperNotImplemented(NotImplementedError):
     pass
+
+
+class MeliItem(object):
+    def __init__(self, **kwargs):
+        self.__dict__.update(kwargs)
 
 
 class MeliCollection(object):
@@ -19,14 +25,13 @@ class MeliCollection(object):
 
     def __iter__(self):
         for item in self.data:
-            yield item
+            yield MeliItem(**item)
 
     def __next__(self):
         if self.index == 0:
             raise StopIteration
         self.index = self.index - 1
         return self.data[self.index]
-
 
 
 class MeliWrapper(Meli):
