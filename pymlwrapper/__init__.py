@@ -18,7 +18,8 @@ class MeliCollection(object):
         self.index = len(data)
 
     def __iter__(self):
-        return self
+        for item in self.data:
+            yield item
 
     def __next__(self):
         if self.index == 0:
