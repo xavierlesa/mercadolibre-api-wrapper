@@ -152,4 +152,4 @@ class MeliWrapper(Meli):
                 }
 
         response = self.api_call("/pictures", files=files, method='files')
-        return MeliPicture(**response.json())
+        return MeliPicture(**response)
