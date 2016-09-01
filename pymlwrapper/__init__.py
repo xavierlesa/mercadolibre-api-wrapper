@@ -17,6 +17,11 @@ class MeliItem(object):
         self.__dict__.update(kwargs)
 
 
+class MeliPicture(object):
+    def __init__(self, **kwargs):
+        self.__dict__.update(kwargs)
+
+
 class MeliCollection(object):
     def __init__(self, data, paging):
         self.data = data
@@ -36,7 +41,7 @@ class MeliCollection(object):
 
 class MeliWrapper(Meli):
 
-    available_methods = ['get', 'post', 'put', 'delete', 'options']
+    available_methods = ['get', 'post', 'put', 'delete', 'options', 'files']
 
     site_ids = [
             {u'id': u'MLB', u'url': 'https://auth.mercadolivre.com.br', u'name': u'Brasil'},
@@ -63,7 +68,14 @@ class MeliWrapper(Meli):
 
     site_id = 'MLA'
 
-    def api_call(self, path='', body=None, params={}, method='get'):
+
+    def files(self, path, files={}, params={}):
+        uri = self.make_path(path)
+        response = self._requests.post(uri, files=files, params=urlencode(params))
+        return response
+
+
+    def api_call(self, path='', body=None, files={}, params={}, method='get'):
         if not params.get('access_token'):
             params.update({'access_token': self.access_token})
 
@@ -74,6 +86,8 @@ class MeliWrapper(Meli):
 
         if method in ['post', 'put']:
             response = _method(path, body, params)
+        elif method in ['files']:
+            response = _method(path, files, params)
         else:
             response = _method(path, params)
 
@@ -129,3 +143,15 @@ class MeliWrapper(Meli):
 
         return collection
 
+
+    def set_media(self, file_path):
+        files = {
+                'file': open(file_path, 'rb')
+                }
+
+        response = self.api_call("/pictures", files=files, method='files')
+        
+        if not response.ok:
+            raise MeliWrapperError 
+
+        return MeliPicture(**response.json())
