@@ -152,8 +152,4 @@ class MeliWrapper(Meli):
                 }
 
         response = self.api_call("/pictures", files=files, method='files')
-        
-        if not response.ok:
-            raise MeliWrapperError 
-
         return MeliPicture(**response.json())
