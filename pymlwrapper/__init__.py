@@ -3,6 +3,8 @@
 import sys
 sys.path.append('../lib')
 from meli import Meli
+from urllib import urlencode
+
 
 class MeliWrapperError(Exception):
     pass
