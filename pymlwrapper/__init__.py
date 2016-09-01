@@ -106,11 +106,14 @@ class MeliWrapper(Meli):
         """
         Return my own user profiel
         """
-        return self.get_user()
+        if not self.me:
+            self.me = self.get_user()
+
+        return self.me
 
 
     def get_user(self, id='me'):
-        return self.api_call('/users/%s' % id)
+        return self.api_call('/users/{0}'.format(id))
 
 
     def get_categories(self, id=None):
@@ -118,11 +121,21 @@ class MeliWrapper(Meli):
         Return category information or root categories
         """
         if not id:
-            endpoint = '/sites/%s/categories' % self.site_id
+            endpoint = '/sites/{0}/categories'.format(self.SITE_ID)
         else:
-            endpoint = '/categories/%s' % id
+            endpoint = '/categories/{0}'.format(id)
 
         return self.api_call(endpoint)
+
+
+    def get_listing_types():
+        """
+        Return listing types
+        """
+        if not self.listing_types:
+            self.listing_types = self.api_call("/sites/{0}/listing_types".format({'site_id': self.SITE_ID}))
+
+        return self.listing_types
 
 
     def get_items(self, user_id, limit=50, offset=0):
@@ -131,13 +144,13 @@ class MeliWrapper(Meli):
         """
 
         args = {
-                'site_id': self.site_id, 
+                'site_id': self.SITE_ID, 
                 'seller_id': user_id,
                 'limit': limit,
                 'offset': offset
                 }
 
-        data = self.api_call("/sites/%(site_id)s/search?seller_id=%(seller_id)s&limit=%(limit)s&offset=%(offset)s" % args)
+        data = self.api_call("/sites/{site_id}/search?seller_id={seller_id}&limit={limit}&offset={offset}".format(args))
 
         paging = data.get('paging')
         result = data.get('results')
